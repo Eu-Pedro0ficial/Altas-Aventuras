@@ -1,7 +1,10 @@
 class CharacterFeatures{
     character = document.querySelector('#character');
     parentElementHeight = this.character.parentNode.offsetHeight;
-    halfHeightOfParentElement = this.parentElementHeight * (50/100);
+    halfHeightOfParentElement = this.parentElementHeight * 0.5;
+    pathForImage = './assets/img/';
+    pathForAudio = './assets/audio/';
+    checkJump = false;
     characterImage = null;
 
     constructor(){
@@ -11,26 +14,29 @@ class CharacterFeatures{
     createImage(){
         const image = document.createElement('img');
         image.setAttribute('id', 'image');
-        image.src = "./assets/img/person.png";
+        image.src = this.pathForImage + "person.png";
         this.character.appendChild(image);
         this.characterImage = image;
     }
 
     actionJump(){
-        this.characterSound('jumping');
-        this.characterAnimation('jumping');
-        let characterHeight = 0;
+        if(!this.checkJump){
+            this.checkJump = true;
+            this.characterSound('jumping');
+            this.characterAnimation('jumping');
+            let characterHeight = 0;
 
-        const setIntervalIndex = setInterval(()=>{
-            characterHeight += 10;
-            this.changingCharacterHeight(characterHeight);
+            const setIntervalIndex = setInterval(()=>{
+                characterHeight += 10;
+                this.changingCharacterHeight(characterHeight);
 
-            if(this.character.offsetTop <= this.halfHeightOfParentElement){
-                this.stopAction(setIntervalIndex);
-                this.dropAction();
-            }
+                if(this.character.offsetTop <= this.halfHeightOfParentElement){
+                    this.stopAction(setIntervalIndex);
+                    this.dropAction();
+                }
 
-        }, 20)
+            }, 20)
+        }
     }
 
     dropAction(){
@@ -42,6 +48,7 @@ class CharacterFeatures{
             this.changingCharacterHeight(characterHeight);
 
             if(this.character.offsetTop >= this.parentElementHeight){
+                this.checkJump = false;
                 this.stopAction(setIntervalIndex);
                 this.die();
             }
@@ -59,12 +66,12 @@ class CharacterFeatures{
     }
 
     characterSound(song){
-        const audio = new Audio(`./assets/audio/${song}.mp3`);
+        const audio = new Audio(this.pathForAudio + `${song}.mp3`);
         audio.play();
     }
 
     characterAnimation(file){
-        this.characterImage.src = `./assets/img/${file}.png`;
+        this.characterImage.src = this.pathForImage + `${file}.png`;
     }
 
     stopAction(setIntervalIndex){
