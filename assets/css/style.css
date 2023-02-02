@@ -3,37 +3,29 @@
     padding: 0;
     box-sizing: border-box;
 }
-body{
+html, body{
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
 }
-#container{
-    padding: 460px;
-    height: 100%;
+
+div#container{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    flex-direction: column;
+
     width: 100%;
-    position: relative;
+    height: 100%;
 }
-
-#character{
+div#character{
     display: flex;
-    align-items: center;
     justify-content: center;
-
-    height: 40px;
-    width: 40px;
-
-    position: absolute;
-    bottom: 0;
-    right: 50%;
-}
-#character img{
-    display: flex;
     align-items: center;
-    justify-content: center;
-    
-    height: 200px;
+
     width: 200px;
-
-    position: absolute;
-    right: -250%;
-    bottom: -150%;
+    height: 100px;
+}
+div#character img{
+    width: 200px;
 }

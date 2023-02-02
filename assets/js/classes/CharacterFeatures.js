@@ -1,14 +1,17 @@
 class CharacterFeatures{
     character = document.querySelector('#character');
-    parentElementHeight = this.character.parentNode.offsetHeight;
+    parentElement = this.character.parentNode;
+    parentElementHeight = this.parentElement.offsetHeight;
     halfHeightOfParentElement = this.parentElementHeight * 0.5;
+    characterPositionOnTheY_axis = null;
     pathForImage = './assets/img/';
     pathForAudio = './assets/audio/';
     checkJump = false;
+    characterAudio = null;
     characterImage = null;
 
     constructor(){
-       this.createImage();
+        this.createImage();
     }
 
     createImage(){
@@ -24,36 +27,37 @@ class CharacterFeatures{
             this.checkJump = true;
             this.characterSound('jumping');
             this.characterAnimation('jumping');
-            let characterHeight = 0;
+            let characterHeight = this.parentElementHeight;
 
             const setIntervalIndex = setInterval(()=>{
-                characterHeight += 10;
+                characterHeight -= 10;
                 this.changingCharacterHeight(characterHeight);
 
                 if(this.character.offsetTop <= this.halfHeightOfParentElement){
+                    this.characterPositionOnTheY_axis = characterHeight;
                     this.stopAction(setIntervalIndex);
                     this.dropAction();
                 }
 
-            }, 20)
+            }, 30)
         }
     }
 
     dropAction(){
         this.characterAnimation('fallingDown');
-        let characterHeight = this.halfHeightOfParentElement;
+        let characterHeight = this.characterPositionOnTheY_axis;
 
         const setIntervalIndex = setInterval(()=>{
-            characterHeight -= 10;
+            characterHeight += 10;
             this.changingCharacterHeight(characterHeight);
 
-            if(this.character.offsetTop >= this.parentElementHeight){
+            if(this.character.offsetTop >= this.parentElementHeight - this.character.offsetHeight){
                 this.checkJump = false;
                 this.stopAction(setIntervalIndex);
                 this.die();
             }
 
-        }, 35)
+        }, 45)
     }
 
     die(){
@@ -62,12 +66,18 @@ class CharacterFeatures{
     }
 
     changingCharacterHeight(characterHeight){
-        this.character.style.bottom = `${characterHeight}px`;
+        this.parentElement.style.height = `${characterHeight}px`;
     }
 
     characterSound(song){
-        const audio = new Audio(this.pathForAudio + `${song}.mp3`);
-        audio.play();
+        const audio = new Audio();
+        this.characterAudio = audio;
+        this.characterAudio.src = this.pathForAudio + `${song}.mp3`
+        this.characterAudio.play();
+    }
+
+    characterSoundPause(){
+        this.characterAudio.src = '';
     }
 
     characterAnimation(file){
