@@ -1,11 +1,9 @@
 'use strict';
-import CharacterFeatures from './classes/CharacterFeatures.js';
-const character = new CharacterFeatures();
+import CharacterFeatures from "./classes/CharacterFeatures.js";
 
-document.addEventListener('keyup', (event)=>{
-    
-    if(event.key == ' '){
-        character.actionJump();
-    }
+const character = new CharacterFeatures;
+document.addEventListener('keydown', (event)=>{
+
+    character.checkAction(event);
         
 })
