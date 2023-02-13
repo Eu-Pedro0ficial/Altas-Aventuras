@@ -15,22 +15,29 @@ div#container{
     align-items: center;
     flex-direction: column;
 
-    width: 100%;
-    height: 100%;
+    width: 50%;
+    height: 50%;
 
+    position: absolute;
+    right: 50%;
+    bottom: 50%;
+    transform: translate(50%, 50%);
+
+    border: 10px solid black;
 }
-
 div#character{
     display: flex;
     justify-content: center;
     align-items: center;
 
-    width: 200px;
-    height: 100px;
+    width: 100px;
+    height: 50px;
 
     position: absolute;
 
+    border: 10px solid purple;
 }
 div#character img{
-    width: 200px;
+    width: 100px;
+    border: 10px solid red;
 }

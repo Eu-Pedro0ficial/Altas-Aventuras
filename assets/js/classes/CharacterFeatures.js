@@ -3,9 +3,10 @@ class CharacterFeatures{
     parentElement = this.character.parentNode;
     parentElementHeight = this.parentElement.offsetHeight;
     characterPositionOnTheY_axis = null;
-    characterPositionOnTheX_axis = (this.parentElement.offsetWidth / 2) - (this.character.offsetWidth / 2);
-    rightHoritontalLimit = this.parentElement.offsetWidth - this.character.offsetWidth;
-    leftHoritontalLimit = 0;
+    characterPositionOnTheX_axis = parseInt((this.parentElement.offsetWidth / 2) - (this.character.offsetWidth / 2));
+    characterInitialPosition = this.character.offsetTop;
+    rightHoritontalLimit = (this.parentElement.offsetWidth - this.character.offsetWidth);
+    leftHoritontalLimit = -30;
     pathForImage = './assets/img/';
     pathForAudio = './assets/audio/';
     characterAudio = null;
@@ -19,19 +20,21 @@ class CharacterFeatures{
     }
 
     checkAction(event){
-        switch (event.key) {
-            case ' ':
-                this.actionJump();
-                break;
-            case 'ArrowRight':
-                this.moveCharacterForRight();
-                break;
-            case 'ArrowLeft':
-                this.moveCharacterForLeft();
-                break;
-            default:
-                console.log('Infelizmente essa função não existe')
-                break;
+        if(!this.characterIsDie){
+
+            switch (event.key) {
+                case ' ':
+                    this.actionJump();
+                    break;
+                case 'ArrowRight':
+                    this.moveCharacterForRight();
+                    break;
+                case 'ArrowLeft':
+                    this.moveCharacterForLeft();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -44,14 +47,14 @@ class CharacterFeatures{
     }
 
     actionJump(){
-        if(!this.checkJump && !this.characterIsDie){
+        if(!this.checkJump){
             this.checkJump = true;
             this.characterSound('jumping');
             this.characterAnimation('jumping');
-            let characterHeight = this.parentElementHeight;
+            let characterHeight = 0;
 
             const setIntervalIndex = setInterval(()=>{
-                characterHeight -= 10;
+                characterHeight += 10;
                 this.changingCharacterVertical(characterHeight);
                 let characterPosition = this.character.offsetTop;
                 
@@ -70,11 +73,11 @@ class CharacterFeatures{
         let characterHeight = this.characterPositionOnTheY_axis;
 
         const setIntervalIndex = setInterval(()=>{
-            characterHeight += 10;
+            characterHeight -= 10;
             this.changingCharacterVertical(characterHeight);
             let characterPosition = this.character.offsetTop;
 
-            if(characterPosition >= this.parentElementHeight - this.character.offsetHeight){
+            if(characterPosition >= this.characterInitialPosition){
                 this.checkJump = false;
                 this.stopAction(setIntervalIndex);
                 this.die();
@@ -84,27 +87,21 @@ class CharacterFeatures{
     }
 
     moveCharacterForRight(){
-        this.characterPositionOnTheX_axis -= 10
+        this.characterPositionOnTheX_axis -= this.characterPositionOnTheX_axis <= this.leftHoritontalLimit ? 0 : 10;
         this.changingCharacterHorizontal(this.characterPositionOnTheX_axis);
     }
-
+    
     moveCharacterForLeft(){
-        this.characterPositionOnTheX_axis += 10
+        this.characterPositionOnTheX_axis += this.characterPositionOnTheX_axis >= this.rightHoritontalLimit ? 0 : 10;
         this.changingCharacterHorizontal(this.characterPositionOnTheX_axis);
     }
     
     changingCharacterHorizontal(characterPosition){
-        if(this.validationForHorizontalMovement()){
-            this.character.style.right = `${characterPosition}px`
-        }
-    }
-
-    validationForHorizontalMovement(){
-        return this.characterPositionOnTheX_axis >= this.leftHoritontalLimit && this.characterPositionOnTheX_axis <= this.rightHoritontalLimit;
+        this.character.style.right = `${characterPosition}px`
     }
 
     changingCharacterVertical(characterPosition){
-        this.parentElement.style.height = `${characterPosition}px`;
+        this.character.style.bottom = `${characterPosition}px`;
     }
     
     characterSound(song){
