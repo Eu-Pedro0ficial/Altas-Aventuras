@@ -19,25 +19,6 @@ class CharacterFeatures{
         this.createImage();
     }
 
-    checkAction(event){
-        if(!this.characterIsDie){
-
-            switch (event.key) {
-                case ' ':
-                    this.actionJump();
-                    break;
-                case 'ArrowRight':
-                    this.moveCharacterForRight();
-                    break;
-                case 'ArrowLeft':
-                    this.moveCharacterForLeft();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     createImage(){
         const image = document.createElement('img');
         image.setAttribute('id', 'image');
@@ -87,12 +68,12 @@ class CharacterFeatures{
     }
 
     moveCharacterForRight(){
-        this.characterPositionOnTheX_axis -= this.characterPositionOnTheX_axis <= this.leftHoritontalLimit ? 0 : 10;
+        this.characterPositionOnTheX_axis -= this.characterPositionOnTheX_axis <= this.leftHoritontalLimit ? 0 : 5;
         this.changingCharacterHorizontal(this.characterPositionOnTheX_axis);
     }
     
     moveCharacterForLeft(){
-        this.characterPositionOnTheX_axis += this.characterPositionOnTheX_axis >= this.rightHoritontalLimit ? 0 : 10;
+        this.characterPositionOnTheX_axis += this.characterPositionOnTheX_axis >= this.rightHoritontalLimit ? 0 : 5;
         this.changingCharacterHorizontal(this.characterPositionOnTheX_axis);
     }
     
