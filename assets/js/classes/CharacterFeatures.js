@@ -3,12 +3,17 @@ class CharacterFeatures{
     parentElement = this.character.parentNode;
     parentElementHeight = this.parentElement.offsetHeight;
     characterPositionOnTheY_axis = null;
+    characterPositionOnTheX_axis = parseInt((this.parentElement.offsetWidth / 2) - (this.character.offsetWidth / 2));
+    characterInitialPosition = this.character.offsetTop;
+    rightHoritontalLimit = (this.parentElement.offsetWidth - this.character.offsetWidth);
+    leftHoritontalLimit = -30;
     pathForImage = './assets/img/';
     pathForAudio = './assets/audio/';
     characterAudio = null;
     characterImage = null;
     characterIsDie = false;
     checkJump = false;
+
     
     constructor(){
         this.createImage();
@@ -23,15 +28,15 @@ class CharacterFeatures{
     }
 
     actionJump(){
-        if(!this.checkJump && !this.characterIsDie){
+        if(!this.checkJump){
             this.checkJump = true;
             this.characterSound('jumping');
             this.characterAnimation('jumping');
-            let characterHeight = this.parentElementHeight;
+            let characterHeight = 0;
 
             const setIntervalIndex = setInterval(()=>{
-                characterHeight -= 10;
-                this.changingCharacterHeight(characterHeight);
+                characterHeight += 10;
+                this.changingCharacterVertical(characterHeight);
                 let characterPosition = this.character.offsetTop;
                 
                 if(characterPosition <= this.parentElementHeight * 0.5){
@@ -49,11 +54,11 @@ class CharacterFeatures{
         let characterHeight = this.characterPositionOnTheY_axis;
 
         const setIntervalIndex = setInterval(()=>{
-            characterHeight += 10;
-            this.changingCharacterHeight(characterHeight);
+            characterHeight -= 10;
+            this.changingCharacterVertical(characterHeight);
             let characterPosition = this.character.offsetTop;
 
-            if(characterPosition >= this.parentElementHeight - this.character.offsetHeight){
+            if(characterPosition >= this.characterInitialPosition){
                 this.checkJump = false;
                 this.stopAction(setIntervalIndex);
                 this.die();
@@ -61,9 +66,23 @@ class CharacterFeatures{
 
         }, 45)
     }
+
+    moveCharacterForRight(){
+        this.characterPositionOnTheX_axis -= this.characterPositionOnTheX_axis <= this.leftHoritontalLimit ? 0 : 5;
+        this.changingCharacterHorizontal(this.characterPositionOnTheX_axis);
+    }
     
-    changingCharacterHeight(characterHeight){
-        this.parentElement.style.height = `${characterHeight}px`;
+    moveCharacterForLeft(){
+        this.characterPositionOnTheX_axis += this.characterPositionOnTheX_axis >= this.rightHoritontalLimit ? 0 : 5;
+        this.changingCharacterHorizontal(this.characterPositionOnTheX_axis);
+    }
+    
+    changingCharacterHorizontal(characterPosition){
+        this.character.style.right = `${characterPosition}px`
+    }
+
+    changingCharacterVertical(characterPosition){
+        this.character.style.bottom = `${characterPosition}px`;
     }
     
     characterSound(song){
@@ -82,7 +101,7 @@ class CharacterFeatures{
     }
     
     die(){
-        this.characterIsDie = true;
+        // this.characterIsDie = true;
         this.characterSound('dead');
         this.characterAnimation('dead');
     }
