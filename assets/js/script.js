@@ -1,7 +1,9 @@
 'use strict';
 import CharacterFeatures from "./classes/CharacterFeatures.js";
+import InteractiveBackground from "./classes/InteractiveBackground.js";
 
 const character = new CharacterFeatures;
+const background = new InteractiveBackground;
 
 function detectMovement(){
     window.requestAnimationFrame(detectMovement);
@@ -28,6 +30,8 @@ let key = {
 detectMovement();
 
 document.addEventListener('keydown', (event)=>{
+    background.eventForInteraction = event;
+    background.startBackgroundEvent()
     switch (event.key) {
         case ' ':
             key.spaceKey = true;
