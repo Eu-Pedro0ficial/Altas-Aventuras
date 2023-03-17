@@ -24,7 +24,6 @@ let key = {
     spaceKey: false,
     arrowRightKey: false,
     arrowLeftKey: false
-    
 }
 
 detectMovement();

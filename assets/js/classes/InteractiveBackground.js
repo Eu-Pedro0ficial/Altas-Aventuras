@@ -1,14 +1,10 @@
-import createImage from "../helpers/createImage.js";
-
 class InteractiveBackground{
-    imageBackground = document.getElementById('image-background');
-    eventForInteraction = null;
-    backgroundImage = null;
-    position = 0;
-
+    
     constructor(){
-        this.backgroundImage = createImage(this.imageBackground, 'background-img.png')
-        this.backgroundImage.setAttribute('id', 'background-image')
+        this.imageBackground = document.getElementById('image-background');
+        this.eventForInteraction = null;
+        this.backgroundImage = document.getElementById('image-background');
+        this.position = 0;
     }
 
     startBackgroundEvent(){
