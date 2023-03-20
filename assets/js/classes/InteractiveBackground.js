@@ -1,7 +1,6 @@
 class InteractiveBackground{
     
     constructor(){
-        this.imageBackground = document.getElementById('image-background');
         this.eventForInteraction = null;
         this.backgroundImage = document.getElementById('image-background');
         this.position = 0;
