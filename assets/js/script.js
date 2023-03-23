@@ -1,9 +1,21 @@
 'use strict';
 import CharacterFeatures from "./classes/CharacterFeatures.js";
 import InteractiveBackground from "./classes/InteractiveBackground.js";
+import Platform from "./classes/Platform.js";
 
 const character = new CharacterFeatures;
 const background = new InteractiveBackground;
+const platformInstance = new Platform;
+
+platformInstance.AddRandomPosition();
+platformInstance.addRandomSize();
+
+function loader(){
+
+    setTimeout( loader, 40);
+    platformInstance.addHorizontalMovement();
+}
+loader()
 
 function detectMovement(){
     window.requestAnimationFrame(detectMovement);
@@ -24,6 +36,7 @@ let key = {
     spaceKey: false,
     arrowRightKey: false,
     arrowLeftKey: false
+    
 }
 
 detectMovement();
