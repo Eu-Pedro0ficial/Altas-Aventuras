@@ -3,71 +3,94 @@ import formatStringToNumber from "../helpers/formatStringToNumber.js";
 class Platform{
 
     constructor(){
-        this.container = document.querySelector("#container");
-        this.platform = document.querySelector('#platform');
-        this.element = document.createElement('div');
-        this.platform.setAttribute('id', 'platform')
-        this.platform.appendChild(this.element);
-
+        this.platform_container = document.querySelector('#platforms');
+        this.image_background = document.querySelector('#container');
         this.position = 0;
         this.stringPattern = /[a-z]+/;
-        this.plataforma = document.getElementById('platform');
-        this.image_background = document.querySelector('#container');
-
         this.right = false;
         this.left = true;
-
         this.movement = 'left';
+    }
 
-        this.validationToTheRight = +this.position >= (this.container.clientWidth - this.plataforma.clientWidth);
-        this.validationToTheLeft = +this.position <= 0;
+    platformGenerator(){
+        let num = 1;
+        let content = '';
+        while(num < 85){
+            content += `
+                <div id="platform" data-movement="left" data-num="${num}"></div>
+            `;
+            num++
+        }
+        this.platform_container.innerHTML = content;
+        this.platform = document.querySelectorAll('#platform');
     }
 
     AddRandomPosition(){
-        let position_x = Math.floor(Math.random() * ((this.image_background.clientWidth - this.plataforma.clientWidth) - 1) + 1);
-        let position_y = Math.floor(Math.random() * ((this.image_background.clientHeight - this.plataforma.clientHeight)- 1) + 1);
+        let position_y = 80;
 
-        this.plataforma.style.bottom = `${position_y}px`;
-        this.plataforma.style.left = `${position_x}px`;
+        this.platform.forEach(element =>{
+            let position_x = Math.floor(Math.random() * ((this.image_background.clientWidth - element.clientWidth) - 1) + 1);
+
+            element.style.bottom = `${position_y}px`;
+            element.style.left = `${position_x}px`;
+            position_y += 80
+        })
     }
 
     addRandomSize(){
-        let width = Math.floor(Math.random() * (150 - 40) + 40);
-        this.plataforma.style.width = `${width}px`;
+        this.platform.forEach(element =>{
+            let width = Math.floor(Math.random() * (150 - 40) + 40);
+
+            element.style.width = `${width}px`;
+        })
     }
     
     addHorizontalMovement(){
-        if(this.movement === 'left'){
-            this.moveToLeft()
-        }
+        const multiplesOfNine = [9, 18, 27, 36, 45, 54, 63, 72, 81];
+        this.platform.forEach( element =>{
+            let movement = element.getAttribute('data-movement');
+            let numberAttribute = element.getAttribute('data-num');
 
-        if(this.movement === 'right'){
-            this.moveToRight()
-        }
+            multiplesOfNine.find( number =>{
+                if(numberAttribute == number){
+                    
+                    if(movement === 'left'){
+                        this.moveToLeft(element)
+                    }
+                    
+                    if(movement === 'right'){
+                        this.moveToRight(element)
+                    }
+                    return;
+                }
+            })
+        })
     }
 
-    moveToRight(){
-        this.position = Number(formatStringToNumber(this.plataforma.style.left, this.stringPattern));
-        let validationToTheRight = +this.position >= (this.container.clientWidth - this.plataforma.clientWidth);
+    moveToRight(element){
+
+        this.position = Number(formatStringToNumber(element.style.left, this.stringPattern));
+        let validationToTheRight = +this.position >= (this.image_background.clientWidth - element.clientWidth);
         
         if(validationToTheRight){
-            this.movement = 'left'
+            element.dataset.movement = 'left'
         }
-
+        
         this.position = validationToTheRight ? this.position : this.position + 10;
-        this.plataforma.style.left = `${this.position}px`;
+        element.style.left = `${this.position}px`;
     }
     
-    moveToLeft(){
-        this.position = Number(formatStringToNumber(this.plataforma.style.left, this.stringPattern));
+    moveToLeft(element){
+
+        this.position = Number(formatStringToNumber(element.style.left, this.stringPattern));
         let validationToTheLeft = +this.position <= 0;
-
+        
         if(validationToTheLeft){
-            this.movement = 'right'
+            element.dataset.movement = 'right'
         }
-
+        
         this.position = validationToTheLeft ? this.position : this.position - 10;
-        this.plataforma.style.left = `${this.position}px`;
+        element.style.left = `${this.position}px`;
     }
 }
 

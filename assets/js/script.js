@@ -7,6 +7,7 @@ const character = new CharacterFeatures;
 const background = new InteractiveBackground;
 const platformInstance = new Platform;
 
+platformInstance.platformGenerator()
 platformInstance.AddRandomPosition();
 platformInstance.addRandomSize();
 
@@ -76,3 +77,7 @@ document.addEventListener('keyup', (event)=>{
     }
     
 })
+
+// Spawnar mais plataformas
+// Pegar a posição de cada plataforma e fazer o boneco parar em cima
+// Fazer o background se mexer sempre que o personagem pular
