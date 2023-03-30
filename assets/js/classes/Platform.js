@@ -10,19 +10,23 @@ class Platform{
         this.right = false;
         this.left = true;
         this.movement = 'left';
+        this.maxSizePlatform = 150;
+        this.minSizePlatform = 80;
+        this.amountOfPlatforms = 87;
+
     }
 
     platformGenerator(){
         let num = 1;
         let content = '';
-        while(num < 85){
+        while(num < this.amountOfPlatforms){
             content += `
-                <div id="platform" data-movement="left" data-num="${num}"></div>
+                <div class="platform" data-movement="left" data-num="${num}"></div>
             `;
             num++
         }
         this.platform_container.innerHTML = content;
-        this.platform = document.querySelectorAll('#platform');
+        this.platform = document.querySelectorAll('.platform');
     }
 
     AddRandomPosition(){
@@ -39,7 +43,7 @@ class Platform{
 
     addRandomSize(){
         this.platform.forEach(element =>{
-            let width = Math.floor(Math.random() * (150 - 40) + 40);
+            let width = Math.floor(Math.random() * (this.maxSizePlatform - this.minSizePlatform) + this.minSizePlatform);
 
             element.style.width = `${width}px`;
         })
@@ -70,7 +74,7 @@ class Platform{
     moveToRight(element){
 
         this.position = Number(formatStringToNumber(element.style.left, this.stringPattern));
-        let validationToTheRight = +this.position >= (this.image_background.clientWidth - element.clientWidth);
+        let validationToTheRight = this.position >= (this.image_background.clientWidth - element.clientWidth);
         
         if(validationToTheRight){
             element.dataset.movement = 'left'
@@ -83,7 +87,7 @@ class Platform{
     moveToLeft(element){
 
         this.position = Number(formatStringToNumber(element.style.left, this.stringPattern));
-        let validationToTheLeft = +this.position <= 0;
+        let validationToTheLeft = this.position <= 0;
         
         if(validationToTheLeft){
             element.dataset.movement = 'right'
