@@ -65,3 +65,9 @@ div#character img{
     width: 100px;
     border: 10px solid red;
 }
+
+div.platform{
+    height: 15px;
+    background-color: blue;
+    position:  absolute;
+}
