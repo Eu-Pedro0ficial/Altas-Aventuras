@@ -3,23 +3,25 @@ import CharacterFeatures from "./classes/CharacterFeatures.js";
 import InteractiveBackground from "./classes/InteractiveBackground.js";
 import Platform from "./classes/Platform.js";
 
+let key = {
+    spaceKey: false,
+    arrowRightKey: false,
+    arrowLeftKey: false
+    
+}
+
 const character = new CharacterFeatures;
 const background = new InteractiveBackground;
 const platformInstance = new Platform;
 
-platformInstance.platformGenerator()
-platformInstance.AddRandomPosition();
-platformInstance.addRandomSize();
+function loaderHorizontalMovementPlatform(){
 
-function loader(){
-
-    setTimeout( loader, 40);
+    setTimeout( loaderHorizontalMovementPlatform, 40);
     platformInstance.addHorizontalMovement();
 }
-loader()
+loaderHorizontalMovementPlatform()
 
 function detectMovement(){
-    window.requestAnimationFrame(detectMovement);
     if(key.spaceKey){
         character.actionJump();
     }
@@ -32,15 +34,38 @@ function detectMovement(){
         character.moveCharacterForLeft();
     }
 }
+//  limitar a quantidade de plataformas que serão lidas pelo forEach utilizando o tamanho do pulo
+const platforms = document.querySelectorAll('.platform');
+function update(){
+    window.requestAnimationFrame(update);
+    const characterPositionTop = character.character.offsetTop
+    const characterPositionLeft = character.character.offsetLeft;
+    const characterHeight = character.character.clientHeight
+    // console.log(platforms[0].offsetTop, characterPositionTop);
 
-let key = {
-    spaceKey: false,
-    arrowRightKey: false,
-    arrowLeftKey: false
-    
+    platforms.forEach((plaftom) => {
+        let platformOffsetTop = plaftom.offsetTop;
+        let platformOffsetLeft = plaftom.offsetLeft;
+        let platformWidth = plaftom.clientWidth;
+        let platformHeight = plaftom.clientHeight;
+
+        if(
+            character.isFall &&
+            platformOffsetTop > characterPositionTop && //**
+            platformOffsetTop < (characterPositionTop + 200) && //**
+            (characterPositionTop + characterHeight) > (platformOffsetTop - platformHeight) && 
+            (characterPositionTop + characterHeight) < (platformOffsetTop - platformHeight + 10) && 
+            characterPositionLeft > platformOffsetLeft && 
+            characterPositionLeft < platformOffsetLeft + platformWidth
+            ){
+            character.checkJump = false;
+            character.stopAction(character.setIntervalIndex);
+        }
+    })
+
+    detectMovement();
 }
-
-detectMovement();
+update();
 
 document.addEventListener('keydown', (event)=>{
     background.eventForInteraction = event;
@@ -78,6 +103,6 @@ document.addEventListener('keyup', (event)=>{
     
 })
 
-// Spawnar mais plataformas
-// Pegar a posição de cada plataforma e fazer o boneco parar em cima
+// Algumas vezes ele passa direto pela plataforma sem parar em cima
+// Fazer ele cair se ele não estiver em cima da plataforma
 // Fazer o background se mexer sempre que o personagem pular

@@ -1,21 +1,23 @@
 class CharacterFeatures{
-    character = document.querySelector('#character');
-    parentElement = this.character.parentNode;
-    parentElementHeight = this.parentElement.offsetHeight;
-    characterPositionOnTheY_axis = null;
-    characterPositionOnTheX_axis = parseInt((this.parentElement.offsetWidth / 2) - (this.character.offsetWidth / 2));
-    characterInitialPosition = this.character.offsetTop;
-    rightHoritontalLimit = (this.parentElement.offsetWidth - this.character.offsetWidth);
-    leftHoritontalLimit = -30;
-    pathForImage = './assets/img/';
-    pathForAudio = './assets/audio/';
-    characterAudio = null;
-    characterImage = null;
-    characterIsDie = false;
-    checkJump = false;
-
     
     constructor(){
+        this.character = document.querySelector('#character');
+        this.parentElement = this.character.parentNode;
+        this.characterPositionOnTheY_axis = 0;
+        this.characterPositionOnTheX_axis = parseInt((this.parentElement.offsetWidth / 2) - (this.character.offsetWidth / 2));
+        this.characterInitialPosition = this.character.offsetTop;
+        this.rightHoritontalLimit = (this.parentElement.offsetWidth - this.character.offsetWidth);
+        this.leftHoritontalLimit = -30;
+        this.pathForImage = './assets/img/';
+        this.pathForAudio = './assets/audio/';
+        this.characterAudio = null;
+        this.characterImage = null;
+        this.characterIsDie = false;
+        this.checkJump = false;
+
+        this.isFall = false;
+        this.stopJump = false;
+
         this.createImage();
     }
 
@@ -29,42 +31,45 @@ class CharacterFeatures{
 
     actionJump(){
         if(!this.checkJump){
+            this.isFall = false;
+            this.stopJump = false
             this.checkJump = true;
             this.characterSound('jumping');
             this.characterAnimation('jumping');
-            let characterHeight = 0;
-
+            this.characterAfterPosition = this.character.offsetTop
+            let characterHeight = this.characterPositionOnTheY_axis;
+            
             const setIntervalIndex = setInterval(()=>{
-                characterHeight += 10;
+                characterHeight += 2;
                 this.changingCharacterVertical(characterHeight);
                 let characterPosition = this.character.offsetTop;
                 
-                if(characterPosition <= this.parentElementHeight * 0.5){
+                if(characterPosition <= (this.characterAfterPosition - 200)){
                     this.characterPositionOnTheY_axis = characterHeight;
                     this.stopAction(setIntervalIndex);
                     this.dropAction();
                 }
 
-            }, 30)
+            }, 3)
         }
     }
 
     dropAction(){
+        this.isFall = true;
         this.characterAnimation('fallingDown');
-        let characterHeight = this.characterPositionOnTheY_axis;
 
-        const setIntervalIndex = setInterval(()=>{
-            characterHeight -= 10;
-            this.changingCharacterVertical(characterHeight);
+        this.setIntervalIndex = setInterval(()=>{
+            this.characterPositionOnTheY_axis -= 2;
+            this.changingCharacterVertical(this.characterPositionOnTheY_axis);
             let characterPosition = this.character.offsetTop;
 
             if(characterPosition >= this.characterInitialPosition){
                 this.checkJump = false;
-                this.stopAction(setIntervalIndex);
+                this.stopAction(this.setIntervalIndex);
                 this.die();
             }
 
-        }, 45)
+        }, 4)
     }
 
     moveCharacterForRight(){

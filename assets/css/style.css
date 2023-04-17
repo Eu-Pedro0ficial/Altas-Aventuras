@@ -15,7 +15,7 @@ div#container{
     align-items: center;
     flex-direction: column;
 
-    overflow: hidden;
+    /* overflow: hidden; */
 
     width: 50%;
     height: 50%;
@@ -58,6 +58,7 @@ div#character{
     height: 50px;
 
     position: absolute;
+    bottom: 0;
 
     border: 10px solid purple;
 }

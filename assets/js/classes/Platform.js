@@ -14,6 +14,7 @@ class Platform{
         this.minSizePlatform = 80;
         this.amountOfPlatforms = 87;
 
+        this.platformGenerator();
     }
 
     platformGenerator(){
@@ -27,13 +28,16 @@ class Platform{
         }
         this.platform_container.innerHTML = content;
         this.platform = document.querySelectorAll('.platform');
+
+        this.AddRandomPosition();
+        this.addRandomSize();
     }
 
     AddRandomPosition(){
         let position_y = 80;
 
         this.platform.forEach(element =>{
-            let position_x = Math.floor(Math.random() * ((this.image_background.clientWidth - element.clientWidth) - 1) + 1);
+            let position_x = Math.floor(Math.random() * (this.image_background.clientWidth - this.maxSizePlatform));
 
             element.style.bottom = `${position_y}px`;
             element.style.left = `${position_x}px`;
