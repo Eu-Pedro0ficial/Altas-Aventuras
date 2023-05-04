@@ -38,9 +38,6 @@ document.addEventListener('keyup', ( event )=>{
         case 'ArrowLeft':
             screen.pressKey('ArrowLeft', false);
             break;
-        case ' ':
-            // screen.pressKey('Space', false);
-            break;
     }
 })
 
