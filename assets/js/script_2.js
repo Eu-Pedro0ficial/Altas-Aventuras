@@ -1,19 +1,16 @@
 import Screen from "./classes/Screen.js";
 import Character from "./classes/Character.js";
 
-const screen = new Screen;
-const character = new Character;
-const body = document.querySelector("body");
-
-body.appendChild(screen.getElement());
-screen.insert(character);
-
+window.character = new Character;
 character.position.x = 230;
-character.position.y = 430;
+character.position.y = 0;
 character.velocity.x = 10;
 character.velocity.y = 10;
 
-screen.getInitialPositions();
+const screen = new Screen(character, true);
+const body = document.querySelector("body");
+
+body.appendChild(screen.getElement());
 screen.paint();
 
 document.addEventListener('keydown', ( event )=>{

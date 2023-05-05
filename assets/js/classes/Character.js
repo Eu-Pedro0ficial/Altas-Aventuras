@@ -2,7 +2,11 @@ class Character{
 
     constructor(){
         this.element = document.createElement("div");
-        this.draw()
+        this.element.style.border = "3px solid red";
+        this.element.style.height = "50px";
+        this.element.style.width = "50px";
+        this.element.style.position = "absolute";
+
         this.position = {
             x: 0,
             y: 0
@@ -18,11 +22,8 @@ class Character{
     }
 
     draw(){
-        this.element.style.border = "3px solid red";
-        this.element.style.height = "50px";
-        this.element.style.width = "50px";
-
-        this.element.style.position = "absolute";
+        this.setPositionLeft(this.position.x);
+        this.setPositionTop(this.position.y);
     }
 
     setPositionTop(value){
