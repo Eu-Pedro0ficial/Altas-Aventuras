@@ -7,10 +7,14 @@ character.position.y = 0;
 character.velocity.x = 10;
 character.velocity.y = 10;
 
-const screen = new Screen(character, true);
+const screen = new Screen({
+    character,
+    gravity: true        
+});
 const body = document.querySelector("body");
 
 body.appendChild(screen.getElement());
+screen.setProperties();
 screen.paint();
 
 document.addEventListener('keydown', ( event )=>{

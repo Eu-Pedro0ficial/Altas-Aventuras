@@ -1,7 +1,10 @@
 class Screen{
     
 
-    constructor(character, gravity=false){
+    constructor({
+            character,
+            gravity = false        
+        }){
         this.character = character;
         this.lastFallPositionCharacter = null;
         this.gravity = gravity;
@@ -12,7 +15,11 @@ class Screen{
         this.container.style.height = "500px";
         this.container.style.width = "500px";
 
-        this.floor = 500 - 50; //@TODO - colocar esses valores como properties
+        this.containerSize = 0;
+        this.floor = 0;
+
+        this.leftHoritontalLimit = 0;
+        this.rightHoritontalLimit = 0;
         
         this.screenObjects = [];
         this.keys = {
@@ -21,37 +28,47 @@ class Screen{
             space: false,
         }
         this.strength = 1.8;
+        this.acceleration = 0.8;
         this.controlGravity = this.strength;
         this.position = {
             y: 0,
             x: 0
         }
         this.isJump = false;
-
+        
         this.insert(this.character);
         this.drawScreenObjects();
-        
-        if (this.gravity) {
-            this.enableGravity();
-        }
     }
-
+    
     insert(screenObject){
         this.screenObjects.push(screenObject);
         this.container.appendChild(screenObject.getElement());
     }
 
+    setProperties(){
+        this.containerSize = this.container.clientWidth;
+        this.floor = this.containerSize - this.character.characterSize;
+        this.rightHoritontalLimit = this.containerSize - this.character.characterSize;
+    }
+
     getElement(){
         return this.container;
     }
-
+    
     draw() {
         this.drawScreenObjects();
+        
+        if(this.gravity) {
+            this.enableGravity();
+        }
+
+        this.detectKey()
     }
 
     paint(){
         setInterval(()=>{
             this.draw();
+
         }, 50)
     }
 
@@ -60,19 +77,6 @@ class Screen{
             this.screenObjects[key].draw();
         }
     }
-
-
-
-    // setPositions(){
-    //     if(this.keys.arrowRight){
-    //         this.position.x += this.velocity.x;
-    //     }
-    // }
-    
-    // setPositions(){
-    //     if(this.keys.arrowRight){
-    //         this.position.x += this.velocity.x;
-    //     }
 
     // setPositions(){
     //     if(this.keys.arrowRight){
@@ -102,31 +106,32 @@ class Screen{
     }
 
     enableGravity () {
-        setInterval(()=>{
-            if (!this.isJump) {
-                if (this.character.position.y < this.floor) {
-                    this.controlGravity += 0.8;
-                    this.character.position.y += this.controlGravity;
-                } else {
-                    this.controlGravity = this.strength;
-                }
+        if (!this.isJump) {
+            if (this.character.position.y < this.floor) {
+                this.controlGravity += this.acceleration;
+                this.character.position.y += this.controlGravity;
+            } else {
+                this.controlGravity = this.strength;
             }
-        }, 50);
-    }
+        }
+    }// @TODO - Não reseta a queda
 
     jump() {
-        let sizeJump = 100;
-        let jumped = 0;
-        setInterval(()=> {
-            if (jumped <= sizeJump) {
-                this.isJump = true;
-                this.character.position.y -= 10;
-                jumped += 10;
-            } else {
-                this.isJump = false;
-            }
-        }, 50);
-    }
+        if(!this.isJump){
+            let sizeJump = 200;
+            let jumped = 0;
+            let index = setInterval(()=> {
+                if (jumped <= sizeJump) {
+                    this.isJump = true;
+                    this.character.position.y -= 10;
+                    jumped += 10;
+                }else {
+                    this.isJump = false;
+                    clearInterval(index);
+                }
+            }, 50);
+        }
+    }// @TODO - Esse setInterval ta rodando direto e ta dando problema
 
     // gravity(){
     //     let containerSize = this.container.clientHeight;
@@ -142,6 +147,22 @@ class Screen{
     //         this.position.y += this.strength;
     //     }
     // }
+
+    detectKey(){
+        if(this.keys.arrowLeft){
+            this.character.position.x -= 
+                this.leftHoritontalLimit <= this.character.position.x ? 
+                this.character.velocity.x : 
+                0;
+        }
+        
+        if(this.keys.arrowRight){
+            this.character.position.x += 
+                this.rightHoritontalLimit >= this.character.position.x ? 
+                this.character.velocity.x :
+                0;
+        }
+    }// @TODO - Mudar o nome!
 
     pressKey(key, value){
         switch (key) {

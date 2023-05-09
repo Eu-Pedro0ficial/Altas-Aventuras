@@ -7,6 +7,7 @@ class Character{
         this.element.style.width = "50px";
         this.element.style.position = "absolute";
 
+        this.characterSize = 50;
         this.position = {
             x: 0,
             y: 0
