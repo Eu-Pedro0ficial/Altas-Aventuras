@@ -117,7 +117,7 @@ class Screen{
                     this.isJump = false;
                     clearInterval(index);
                 }
-            }, 50);
+            }, 10);
         }
     }
 

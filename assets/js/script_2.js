@@ -4,7 +4,7 @@ import Character from "./classes/Character.js";
 window.character = new Character;
 character.position.x = 230;
 character.position.y = 0;
-character.velocity.x = 10;
+character.velocity.x = 2;
 character.velocity.y = 10;
 
 window.screen = new Screen({
