@@ -7,7 +7,7 @@ character.position.y = 0;
 character.velocity.x = 10;
 character.velocity.y = 10;
 
-const screen = new Screen({
+window.screen = new Screen({
     character,
     gravity: true        
 });
@@ -18,29 +18,12 @@ screen.setProperties();
 screen.paint();
 
 document.addEventListener('keydown', ( event )=>{
-    switch (event.key) {
-        case 'ArrowRight':
-            screen.pressKey('ArrowRight', true);
-            break;
-        case 'ArrowLeft':
-            screen.pressKey('ArrowLeft', true);
-            break;
-        case ' ':
-            screen.pressKey('Space', true);
-            break;
-    }
-})
+    screen.pressKey(event.key, true);
+});
 
 document.addEventListener('keyup', ( event )=>{
-    switch (event.key) {
-        case 'ArrowRight':
-            screen.pressKey('ArrowRight', false);
-            break;
-        case 'ArrowLeft':
-            screen.pressKey('ArrowLeft', false);
-            break;
-    }
-})
+    screen.pressKey(event.key, false);
+});
 
 // Pensar na ideia de responsabilidade unica
 // Se perguntar sempre qual a melhor maneira de fazer algo e pensar na responsabilidade que cada elemento vai ter

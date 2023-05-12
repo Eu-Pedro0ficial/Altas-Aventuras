@@ -22,6 +22,11 @@ class Screen{
         this.rightHoritontalLimit = 0;
         
         this.screenObjects = [];
+        this.keymap = {
+            "ArrowRight": "arrowRight",
+            "ArrowLeft": "arrowLeft",
+            " ": "space"
+        }
         this.keys = {
             arrowRight: false,
             arrowLeft: false,
@@ -62,14 +67,12 @@ class Screen{
             this.enableGravity();
         }
 
-        this.detectKey()
+        this.moveCharacter();   
     }
 
     paint(){
-        setInterval(()=>{
-            this.draw();
-
-        }, 50)
+        window.requestAnimationFrame(this.paint.bind(this));
+        this.draw();
     }
 
     drawScreenObjects(){
@@ -77,21 +80,6 @@ class Screen{
             this.screenObjects[key].draw();
         }
     }
-
-    // setPositions(){
-    //     if(this.keys.arrowRight){
-    //         this.position.x += this.velocity.x;
-    //     }
-
-    //     if(this.keys.arrowLeft){
-    //         this.position.x -= this.velocity.x;
-    //     }
-
-    //     if (this.keys.space) {
-    //         this.position.y -= this.velocity.y;
-    //         this.checkJump();
-    //     }
-    // }
 
     checkJump(){
         let currentPosition = this.character.element.offsetTop;
@@ -114,41 +102,26 @@ class Screen{
                 this.controlGravity = this.strength;
             }
         }
-    }// @TODO - Não reseta a queda
+    }
 
     jump() {
-        if(!this.isJump){
-            let sizeJump = 200;
+        if(!this.isJump) {
+            this.isJump = true;
+            let sizeJump = 200; //@ Definir isso como property
             let jumped = 0;
             let index = setInterval(()=> {
                 if (jumped <= sizeJump) {
-                    this.isJump = true;
-                    this.character.position.y -= 10;
-                    jumped += 10;
+                    this.character.position.y -= this.character.velocity.y;
+                    jumped += this.character.velocity.y;
                 }else {
                     this.isJump = false;
                     clearInterval(index);
                 }
             }, 50);
         }
-    }// @TODO - Esse setInterval ta rodando direto e ta dando problema
+    }
 
-    // gravity(){
-    //     let containerSize = this.container.clientHeight;
-    //     let characterOffsetTop = this.character.element.offsetTop;
-    //     let characterSize = this.character.element.clientHeight
-
-    //     if(this.keys.space){
-    //         this.strength = 2.8;
-    //     }
-
-    //     if(characterOffsetTop < containerSize - characterSize && !this.keys.space){
-    //         this.strength += 0.8;
-    //         this.position.y += this.strength;
-    //     }
-    // }
-
-    detectKey(){
+    moveCharacter() {
         if(this.keys.arrowLeft){
             this.character.position.x -= 
                 this.leftHoritontalLimit <= this.character.position.x ? 
@@ -162,21 +135,15 @@ class Screen{
                 this.character.velocity.x :
                 0;
         }
-    }// @TODO - Mudar o nome!
+
+        if(this.keys.space){
+            this.jump();
+        }
+    }
 
     pressKey(key, value){
-        switch (key) {
-            case 'ArrowRight':
-                this.keys.arrowRight = value;
-                break;
-            case 'ArrowLeft':
-                this.keys.arrowLeft = value;
-                break;
-            case 'Space':
-                this.keys.space = value;
-                this.jump();
-                break;
-        }
+        let pressed_key = this.keymap[key]; 
+        this.keys[pressed_key] = value;
     }
 }
 
