@@ -1,21 +1,44 @@
 import Screen from "./classes/Screen.js";
 import Character from "./classes/Character.js";
+import Background from "./classes/Background.js";
 
-window.character = new Character;
-character.position.x = 230;
-character.position.y = 0;
-character.velocity.x = 2;
-character.velocity.y = 10;
+const background = new Background({
+    size: {
+        width: 100,
+        height: 150
+    },
+    pathImage: './assets/img/background-img.jpg',
+    velocity: 3
+});
+
+const character = new Character({
+    size: {
+        width: 50,
+        height: 50
+    },
+    position: {
+        x: 230,
+        y: 0
+    },
+    velocity: {
+        x: 4,
+        y: 10
+    }
+});
 
 window.screen = new Screen({
-    character,
     gravity: true        
 });
+screen.insert(character);
+screen.insert(background);
+screen.setScreenObjectsInProperties();
+
 const body = document.querySelector("body");
 
 body.appendChild(screen.getElement());
 screen.setProperties();
 screen.paint();
+
 
 document.addEventListener('keydown', ( event )=>{
     screen.pressKey(event.key, true);

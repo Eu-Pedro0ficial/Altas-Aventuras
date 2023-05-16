@@ -1,20 +1,36 @@
 class Character{
 
-    constructor(){
-        this.element = document.createElement("div");
-        this.element.style.border = "3px solid red";
-        this.element.style.height = "50px";
-        this.element.style.width = "50px";
-        this.element.style.position = "absolute";
-
-        this.characterSize = 50;
-        this.position = {
+    constructor({
+        size = {
+            width: 0,
+            height: 0
+        },
+        position = {
+            x: 0,
+            y: 0
+        },
+        velocity = {
             x: 0,
             y: 0
         }
+
+    }){
+        this.element = document.createElement("div");
+        this.element.style.border = "3px solid red";
+        this.element.style.height = `${size.height}px`;
+        this.element.style.width = `${size.width}px`;
+        this.element.style.position = "absolute";
+
+        this.type = 'character';
+
+        this.characterSize = 50;
+        this.position = {
+            x: position.x,
+            y: position.y
+        }
         this.velocity = {
-            x: 0,
-            y: 0
+            x: velocity.x,
+            y: velocity.y
         }
     }
 

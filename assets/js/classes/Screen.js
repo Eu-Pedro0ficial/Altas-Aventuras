@@ -5,7 +5,9 @@ class Screen{
             character,
             gravity = false        
         }){
-        this.character = character;
+        this.character = null;
+        this.background = null;
+
         this.lastFallPositionCharacter = null;
         this.gravity = gravity;
         
@@ -17,6 +19,7 @@ class Screen{
 
         this.containerSize = 0;
         this.floor = 0;
+        this.sizeJump = 200;
 
         this.leftHoritontalLimit = 0;
         this.rightHoritontalLimit = 0;
@@ -25,12 +28,16 @@ class Screen{
         this.keymap = {
             "ArrowRight": "arrowRight",
             "ArrowLeft": "arrowLeft",
-            " ": "space"
+            " ": "space",
+            "ArrowUp": "arrowUp",
+            "ArrowDown": "arrowDown"
         }
         this.keys = {
             arrowRight: false,
             arrowLeft: false,
             space: false,
+            arrowUp: false,
+            arrowDown: false
         }
         this.strength = 1.8;
         this.acceleration = 0.8;
@@ -41,8 +48,20 @@ class Screen{
         }
         this.isJump = false;
         
-        this.insert(this.character);
         this.drawScreenObjects();
+    }
+
+    setScreenObjectsInProperties(){
+        for (const key in this.screenObjects) {
+            switch (this.screenObjects[key].type) {
+                case 'character':
+                    this.character = this.screenObjects[key];
+                    break;
+                case 'background':
+                    this.background = this.screenObjects[key];
+                    break;
+            }
+        }
     }
     
     insert(screenObject){
@@ -67,7 +86,8 @@ class Screen{
             this.enableGravity();
         }
 
-        this.moveCharacter();   
+        this.moveCharacter();
+        this.moveScenario();
     }
 
     paint(){
@@ -78,14 +98,6 @@ class Screen{
     drawScreenObjects(){
         for (const key in this.screenObjects) {
             this.screenObjects[key].draw();
-        }
-    }
-
-    checkJump(){
-        let currentPosition = this.character.element.offsetTop;
-
-        if(currentPosition <= (this.lastFallPositionCharacter - 150)){
-            this.keys.space = false;
         }
     }
     
@@ -107,10 +119,9 @@ class Screen{
     jump() {
         if(!this.isJump) {
             this.isJump = true;
-            let sizeJump = 200; //@ Definir isso como property
             let jumped = 0;
             let index = setInterval(()=> {
-                if (jumped <= sizeJump) {
+                if (jumped <= this.sizeJump) {
                     this.character.position.y -= this.character.velocity.y;
                     jumped += this.character.velocity.y;
                 }else {
@@ -138,6 +149,16 @@ class Screen{
 
         if(this.keys.space){
             this.jump();
+        }
+    }
+
+    moveScenario() {
+        if(this.keys.arrowUp){
+            this.background.position.bottom += this.background.velocity;
+        }
+
+        if(this.keys.arrowDown){
+            this.background.position.bottom -= this.background.velocity;
         }
     }
 
