@@ -118,6 +118,7 @@ class Screen{
 
     jump() {
         if(!this.isJump) {
+            // @TODO - Esta tendo pulo infinito, resolver!!
             this.isJump = true;
             let jumped = 0;
             let index = setInterval(()=> {
@@ -156,7 +157,7 @@ class Screen{
         if(this.keys.arrowUp){
             this.background.position.bottom += this.background.velocity;
         }
-
+        //  @TODO - Validação para limitar o quanto vai se mover
         if(this.keys.arrowDown){
             this.background.position.bottom -= this.background.velocity;
         }
