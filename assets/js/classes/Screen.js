@@ -155,11 +155,18 @@ class Screen{
 
     moveScenario() {
         if(this.keys.arrowUp){
-            this.background.position.bottom += this.background.velocity;
+            let offsetBottom = this.background.scenario.offsetTop + this.background.scenario.offsetHeight;
+            this.background.position.bottom += 
+                offsetBottom <= 480 ? 
+                0 :  
+                this.background.velocity;
         }
-        //  @TODO - Validação para limitar o quanto vai se mover
+        
         if(this.keys.arrowDown){
-            this.background.position.bottom -= this.background.velocity;
+            this.background.position.bottom -= 
+                this.background.scenario.offsetTop >= 0 ? 
+                0 : 
+                this.background.velocity;
         }
     }
 
