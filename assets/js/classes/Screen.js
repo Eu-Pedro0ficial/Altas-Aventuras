@@ -1,15 +1,18 @@
 class Screen{
     
 
-    constructor({
-            character,
-            gravity = false        
-        }){
-        this.character = null;
-        this.background = null;
+    constructor(options) {
+        let options_default = {
+            character: null, 
+            background: null, 
+            gravity: false 
+        }
+        this.config = {
+            ...options_default,
+            ...options
+        };
 
         this.lastFallPositionCharacter = null;
-        this.gravity = gravity;
         
         this.container = document.createElement('div');
         this.container.style.position = 'relative';
@@ -47,21 +50,11 @@ class Screen{
             x: 0
         }
         this.isJump = false;
+
+        this.insert(this.config.character);
+        this.insert(this.config.background);
         
         this.drawScreenObjects();
-    }
-
-    setScreenObjectsInProperties(){
-        for (const key in this.screenObjects) {
-            switch (this.screenObjects[key].type) {
-                case 'character':
-                    this.character = this.screenObjects[key];
-                    break;
-                case 'background':
-                    this.background = this.screenObjects[key];
-                    break;
-            }
-        }
     }
     
     insert(screenObject){
@@ -71,8 +64,8 @@ class Screen{
 
     setProperties(){
         this.containerSize = this.container.clientWidth;
-        this.floor = this.containerSize - this.character.characterSize;
-        this.rightHoritontalLimit = this.containerSize - this.character.characterSize;
+        this.floor = this.containerSize - this.config.character.characterSize;
+        this.rightHoritontalLimit = this.containerSize - this.config.character.characterSize;
     }
 
     getElement(){
@@ -82,7 +75,7 @@ class Screen{
     draw() {
         this.drawScreenObjects();
         
-        if(this.gravity) {
+        if(this.config.gravity) {
             this.enableGravity();
         }
 
@@ -102,14 +95,14 @@ class Screen{
     }
     
     setLastFallPositionCharacter(){
-        this.lastFallPositionCharacter = this.character.element.offsetTop;
+        this.lastFallPositionCharacter = this.config.character.element.offsetTop;
     }
 
     enableGravity () {
         if (!this.isJump) {
-            if (this.character.position.y < this.floor) {
+            if (this.config.character.position.y < this.floor) {
                 this.controlGravity += this.acceleration;
-                this.character.position.y += this.controlGravity;
+                this.config.character.position.y += this.controlGravity;
             } else {
                 this.controlGravity = this.strength;
             }
@@ -123,8 +116,8 @@ class Screen{
             let jumped = 0;
             let index = setInterval(()=> {
                 if (jumped <= this.sizeJump) {
-                    this.character.position.y -= this.character.velocity.y;
-                    jumped += this.character.velocity.y;
+                    this.config.character.position.y -= this.config.character.velocity.y;
+                    jumped += this.config.character.velocity.y;
                 }else {
                     this.isJump = false;
                     clearInterval(index);
@@ -135,16 +128,16 @@ class Screen{
 
     moveCharacter() {
         if(this.keys.arrowLeft){
-            this.character.position.x -= 
-                this.leftHoritontalLimit <= this.character.position.x ? 
-                this.character.velocity.x : 
+            this.config.character.position.x -= 
+                this.leftHoritontalLimit <= this.config.character.position.x ? 
+                this.config.character.velocity.x : 
                 0;
         }
         
         if(this.keys.arrowRight){
-            this.character.position.x += 
-                this.rightHoritontalLimit >= this.character.position.x ? 
-                this.character.velocity.x :
+            this.config.character.position.x += 
+                this.rightHoritontalLimit >= this.config.character.position.x ? 
+                this.config.character.velocity.x :
                 0;
         }
 
@@ -155,18 +148,18 @@ class Screen{
 
     moveScenario() {
         if(this.keys.arrowUp){
-            let offsetBottom = this.background.scenario.offsetTop + this.background.scenario.offsetHeight;
-            this.background.position.bottom += 
+            let offsetBottom = this.config.background.scenario.offsetTop + this.config.background.scenario.offsetHeight;
+            this.config.background.position.bottom += 
                 offsetBottom <= 480 ? 
                 0 :  
-                this.background.velocity;
+                this.config.background.velocity;
         }
         
         if(this.keys.arrowDown){
-            this.background.position.bottom -= 
-                this.background.scenario.offsetTop >= 0 ? 
+            this.config.background.position.bottom -= 
+                this.config.background.scenario.offsetTop >= 0 ? 
                 0 : 
-                this.background.velocity;
+                this.config.background.velocity;
         }
     }
 

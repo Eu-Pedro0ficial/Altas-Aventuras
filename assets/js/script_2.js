@@ -27,11 +27,10 @@ const character = new Character({
 });
 
 window.screen = new Screen({
-    gravity: true        
+    gravity: true,
+    background: background,
+    character: character    
 });
-screen.insert(character);
-screen.insert(background);
-screen.setScreenObjectsInProperties();
 
 const body = document.querySelector("body");
 
