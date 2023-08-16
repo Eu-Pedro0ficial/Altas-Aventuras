@@ -106,7 +106,9 @@ class Screen{
             if (this.config.character.position.y < this.floor) {
                 this.controlGravity += this.acceleration;
                 this.config.character.position.y += this.controlGravity;
+                this.config.character.image = "fallingDown";
             } else {
+                this.config.character.image = "person";
                 this.controlGravity = this.strength;
             }
         }
@@ -121,6 +123,8 @@ class Screen{
                 if (jumped <= this.sizeJump) {
                     this.config.character.position.y -= this.config.character.velocity.y;
                     jumped += this.config.character.velocity.y;
+                    this.config.character.image = "jumping";
+                    this.config.character.song = "jumping";
                 }else {
                     this.isJump = false;
                     clearInterval(index);

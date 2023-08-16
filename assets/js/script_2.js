@@ -66,5 +66,9 @@ document.addEventListener('keyup', ( event )=>{
     screen.pressKey(event.key, false);
 });
 
+// @TODO - Refatorar atribuinto tudo as config e fazendo merge de arrays
+// @TODO - Fazer a morte do personagem
+// @TODO - Adicionar mais plataformas
+
 // Pensar na ideia de responsabilidade unica
 // Se perguntar sempre qual a melhor maneira de fazer algo e pensar na responsabilidade que cada elemento vai ter
