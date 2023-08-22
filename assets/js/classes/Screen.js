@@ -1,11 +1,10 @@
 class Screen{
     
-
     constructor(options) {
         let options_default = {
             character: null, 
             background: null,
-            platform: null,
+            platformList: null,
             gravity: false 
         }
         this.config = {
@@ -53,8 +52,7 @@ class Screen{
         this.isJump = false;
 
         this.insert(this.config.character);
-        this.insert(this.config.background);
-        this.insert(this.config.platform);
+        this.insert(this.config.background);        
         
         this.drawScreenObjects();
     }
@@ -83,7 +81,6 @@ class Screen{
 
         this.moveCharacter();
         this.moveScenario();
-        this.movePlatforms();
     }
 
     paint(){
@@ -168,25 +165,6 @@ class Screen{
                 0 : 
                 this.config.background.velocity;
         }
-    }
-
-    movePlatforms(){
-        if(this.config.platform.movement){
-            if(this.config.platform.direction === "left"){
-                if(this.config.platform.position.x <= 0){
-                    this.config.platform.direction = "right";
-                }
-                this.config.platform.position.x -= this.config.platform.velocity.x
-            }
-    
-            if(this.config.platform.direction === "right"){
-                if(this.config.platform.position.x >= 330){
-                    this.config.platform.direction = "left";
-                }
-                this.config.platform.position.x += this.config.platform.velocity.x
-            }
-        }
-
     }
 
     pressKey(key, value){

@@ -6,7 +6,8 @@ class Background{
             height: 0
         },
         pathImage: pathImage,
-        velocity: velocity
+        velocity: velocity,
+        platforms: platforms
     }){
         this.scenario = document.createElement('div');
         this.type = 'background';
@@ -19,8 +20,10 @@ class Background{
             bottom: 0,
             left: 0
         }
-        this.velocity = velocity
+        this.velocity = velocity;
+        this.platforms = platforms;
         this.buildScenery();
+        this.buildPlatforms(platforms)
     }
 
     buildScenery(){
@@ -34,19 +37,60 @@ class Background{
         this.scenario.style.left = `${this.position.left}%`;
         this.scenario.style.zIndex = '-1';
     }
-    
+
     getElement(){
         return this.scenario;
     }
     
     draw(){
+        this.drawPlatforms();
+
         this.setPositionBottom(this.position.bottom);
+        this.movePlatforms()
     }
 
     setPositionBottom(value){
         this.scenario.style.bottom = `${value}px`;
     }
 
+    buildPlatforms(){
+        this.platforms.map((platform)=>{
+            if(platform.index % 3 ==! 0){
+                platform.movement = false;
+            }
+            this.insert(platform);
+        })
+    }
+
+    drawPlatforms(){
+        this.platforms.map((platform) => {
+            platform.draw();
+        })
+    }
+
+    movePlatforms(){
+        this.platforms.map((platform)=>{
+            if(platform.movement){
+                if(platform.direction === "left"){
+                    if(platform.position.x <= 0){
+                        platform.direction = "right";
+                    }
+                    platform.position.x -= platform.velocity.x
+                }
+                
+                if(platform.direction === "right"){
+                    if(platform.position.x >= 330){
+                        platform.direction = "left";
+                    }
+                    platform.position.x += platform.velocity.x
+                }
+            }
+        })
+    }
+
+    insert(screenObject){
+        this.scenario.appendChild(screenObject.getElement());
+    }
 }
 
 export default Background;

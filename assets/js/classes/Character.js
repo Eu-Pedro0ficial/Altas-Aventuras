@@ -58,7 +58,7 @@ class Character{
     }
 
     draw(){
-        this.characterVoice(this.song);
+        // this.characterVoice(this.song);
         this.characterImage(this.image);
         this.setPositionLeft(this.position.x);
         this.setPositionTop(this.position.y);

@@ -14,7 +14,8 @@ export default class Platforms {
     },
     color: color,
     movement: movement,
-    direction: direction
+    direction: direction,
+    index: index
 }){
     this.platform = document.createElement("div");
     this.size = {
@@ -32,7 +33,9 @@ export default class Platforms {
     this.color = color;
     this.movement = movement;
     this.direction = direction;
+    this.index = index;
     this.buildScenery();
+    this.draw();
   }
 
   getElement(){
@@ -44,6 +47,7 @@ export default class Platforms {
     this.platform.style.width = `${this.size.width}px`;
     this.platform.style.height = `${this.size.height}px`;
     this.platform.style.background = this.color;
+    this.platform.setAttribute("id", `${this.index}`)
   }
 
   draw(){
