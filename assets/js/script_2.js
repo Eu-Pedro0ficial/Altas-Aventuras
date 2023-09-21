@@ -5,26 +5,30 @@ import Platforms from "./classes/Platforms.js";
 
 function startPlatforms(){
     const platformList = [];
-    let index = 0;
+    const amountPlatforms = 87;
+    const fixedValueForSum = 80;
     let position_y = 80;
 
-    while (index < 87) {
+    for (let index = 0; index < amountPlatforms; index++) {
+        const height = 15;
+        const speedOnXAxis = 1.5;
+        const speedOnYAxis = 0;
         let width = Math.floor(Math.random() * (150 - 80) + 80);
-        let position_x = Math.floor(Math.random() * (500 - width))
+        let position_x = Math.floor(Math.random() * (500 - width));
 
         platformList.push(
             new Platforms({
                 size: {
                     width: width,
-                    height: 15
+                    height: height
                 },
                 position: {
                     x: position_x,
                     y: position_y
                 },
                 velocity: {
-                    x: 1.5,
-                    y: 0
+                    x: speedOnXAxis,
+                    y: speedOnYAxis
                 },
                 color: "blue",
                 movement: true,
@@ -32,12 +36,11 @@ function startPlatforms(){
                 index: index
             })
         )
-        position_y += 80;
-        index++
+        position_y += fixedValueForSum;
     }
+
     return platformList;
 }
-
 const platformList = startPlatforms();
 
 const background = new Background({
@@ -47,9 +50,7 @@ const background = new Background({
     },
     pathImage: './assets/img/background-img.jpg',
     velocity: 30,
-    platforms: platformList
 });
-
 const character = new Character({
     size: {
         width: 50,
@@ -85,8 +86,10 @@ document.addEventListener('keydown', ( event )=>{
 document.addEventListener('keyup', ( event )=>{
     screen.pressKey(event.key, false);
 });
-
-// @TODO - Refatorar atribuinto tudo as config e fazendo merge de arrays
+   
+// @TODO - Reduzir os if
+// @TODO - Diminuir blocos de codigo denso
+// @TODO - Fazer o personagem detectar as plataformas
 // @TODO - Fazer a morte do personagem
 // @TODO - O personagem não ta soltando som da forma certa
 

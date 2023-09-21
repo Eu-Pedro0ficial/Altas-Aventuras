@@ -1,39 +1,38 @@
 export default class Platforms {
-  constructor({
-    size = {
-        width: 0,
-        height: 0
-    },
-    position = {
-        x: 0,
-        y: 0
-    },
-    velocity = {
-        x: 0,
-        y: 0
-    },
-    color: color,
-    movement: movement,
-    direction: direction,
-    index: index
-}){
-    this.platform = document.createElement("div");
-    this.size = {
-      width: size.width,
-      height: size.height
+  constructor(options){
+
+    this.optionsDefault = {
+      size: {
+          width: 0,
+          height: 0
+      },
+      position: {
+          x: 0,
+          y: 0
+      },
+      velocity: {
+          x: 0,
+          y: 0
+      },
+      color: null,
+      movement: null,
+      direction: null,
+      index: null
     }
+    this.CONFIG = Object.assign(this.optionsDefault, options)
+
+    this.platform = document.createElement("div");
     this.position = {
-      x: position.x,
-      y: position.y
+      x: this.CONFIG.position.x,
+      y: this.CONFIG.position.y
     }
     this.velocity = {
-      x: velocity.x,
-      y: velocity.y
+      x: this.CONFIG.velocity.x,
+      y: this.CONFIG.velocity.y
     }
-    this.color = color;
-    this.movement = movement;
-    this.direction = direction;
-    this.index = index;
+    this.movement = this.CONFIG.movement;
+    this.direction = this.CONFIG.direction;
+    this.index = this.CONFIG.index;
     this.buildScenery();
     this.draw();
   }
@@ -44,10 +43,10 @@ export default class Platforms {
 
   buildScenery(){
     this.platform.style.position = "absolute";
-    this.platform.style.width = `${this.size.width}px`;
-    this.platform.style.height = `${this.size.height}px`;
-    this.platform.style.background = this.color;
-    this.platform.setAttribute("id", `${this.index}`)
+    this.platform.style.width = `${this.CONFIG.size.width}px`;
+    this.platform.style.height = `${this.CONFIG.size.height}px`;
+    this.platform.style.background = this.CONFIG.color;
+    this.platform.setAttribute("id", `${this.CONFIG.index}`)
   }
 
   draw(){
@@ -61,6 +60,14 @@ export default class Platforms {
 
   setPositionTop(value){
     this.platform.style.top = `${value}px`;
-}
+  }
+
+  getElementPosition(){
+
+    return {
+      x: this.getElement().getBoundingClientRect().x,
+      y: this.getElement().getBoundingClientRect().y
+    }
+  }
 
 }

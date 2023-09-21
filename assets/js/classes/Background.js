@@ -1,35 +1,30 @@
 class Background{
 
-    constructor({
-        size = {
-            width: 0,
-            height: 0
-        },
-        pathImage: pathImage,
-        velocity: velocity,
-        platforms: platforms
-    }){
+    constructor(options){
+        this.optionsDefault = {
+            size: {
+                width: 0,
+                height: 0
+            },
+            pathImage: null,
+            velocity: null,
+        }
+
+        this.CONFIG = Object.assign(this.optionsDefault, options);
         this.scenario = document.createElement('div');
         this.type = 'background';
-        this.size = {
-            width: size.width,
-            height: size.height
-        }
-        this.pathImage = pathImage;
         this.position = {
             bottom: 0,
             left: 0
         }
-        this.velocity = velocity;
-        this.platforms = platforms;
+        this.velocity = this.CONFIG.velocity;
         this.buildScenery();
-        this.buildPlatforms(platforms)
     }
 
     buildScenery(){
-        this.scenario.style.width = `${this.size.width}%`;
-        this.scenario.style.height = `${this.size.height}%`;
-        this.scenario.style.backgroundImage = `url(${this.pathImage})`;
+        this.scenario.style.width = `${this.CONFIG.size.width}%`;
+        this.scenario.style.height = `${this.CONFIG.size.height}%`;
+        this.scenario.style.backgroundImage = `url(${this.CONFIG.pathImage})`;
         this.scenario.style.backgroundSize = '100%';
         this.scenario.style.backgroundRepeat = 'repeat-y';
         this.scenario.style.position = 'absolute';
@@ -43,49 +38,27 @@ class Background{
     }
     
     draw(){
-        this.drawPlatforms();
-
         this.setPositionBottom(this.position.bottom);
-        this.movePlatforms()
     }
 
     setPositionBottom(value){
         this.scenario.style.bottom = `${value}px`;
     }
-
-    buildPlatforms(){
-        this.platforms.map((platform)=>{
-            if(platform.index % 3 ==! 0){
+ 
+    setMovementForAllPlatformsAndInsertInElement(platforms){
+        // @TODO - Responsabilidade unica
+        platforms.map((platform)=>{
+            if(this.calculationToKnowWhichPlatformWillReceiveTheMovement(platform)){
                 platform.movement = false;
             }
             this.insert(platform);
         })
     }
 
-    drawPlatforms(){
-        this.platforms.map((platform) => {
-            platform.draw();
-        })
-    }
-
-    movePlatforms(){
-        this.platforms.map((platform)=>{
-            if(platform.movement){
-                if(platform.direction === "left"){
-                    if(platform.position.x <= 0){
-                        platform.direction = "right";
-                    }
-                    platform.position.x -= platform.velocity.x
-                }
-                
-                if(platform.direction === "right"){
-                    if(platform.position.x >= 330){
-                        platform.direction = "left";
-                    }
-                    platform.position.x += platform.velocity.x
-                }
-            }
-        })
+    calculationToKnowWhichPlatformWillReceiveTheMovement({ index }){
+        const dividerParameter = 3;
+        const equalityParameter = 0;
+        return index % dividerParameter ==! equalityParameter;
     }
 
     insert(screenObject){
