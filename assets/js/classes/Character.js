@@ -75,6 +75,18 @@ class Character{
         this.imageTag.src = `${this.pathImage}${image}.png`
     }
 
+    startingMovementTo(direction, limitMovement){
+      const neutralValue = 0;
+
+      if(direction === "right"){
+        this.position.x += limitMovement >= this.position.x ? this.velocity.x : neutralValue;
+      }
+
+      if(direction === "left"){
+        this.position.x -= limitMovement <= this.position.x ? this.velocity.x : neutralValue;
+      }
+    }
+
     characterVoice(song){
         if(song === ""){
             return;

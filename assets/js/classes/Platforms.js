@@ -62,6 +62,18 @@ export default class Platforms {
     this.platform.style.top = `${value}px`;
   }
 
+  startingMovementTo(direction, limitMovement){
+    if(direction === "left"){
+      this.direction = (this.position.x <= limitMovement) ? "right" : "left";
+      this.position.x -= this.velocity.x
+    }
+    
+    if(direction === "right"){
+      this.direction = (this.position.x >= limitMovement) ? "left" : "right";
+      this.position.x += this.velocity.x
+    }
+  }
+
   getElementPosition(){
 
     return {

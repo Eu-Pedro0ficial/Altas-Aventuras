@@ -34,31 +34,46 @@ class Background{
     }
 
     getElement(){
-        return this.scenario;
+      return this.scenario;
     }
     
     draw(){
-        this.setPositionBottom(this.position.bottom);
+      this.setPositionBottom(this.position.bottom);
     }
 
     setPositionBottom(value){
-        this.scenario.style.bottom = `${value}px`;
+      this.scenario.style.bottom = `${value}px`;
+    }
+
+    startingMovementTo(direction, limitMovement){
+      const offsetTopValue = this.scenario.offsetTop;
+      const offsetBottomValue = offsetTopValue + this.scenario.offsetHeight;
+      const neutralValue = 0
+
+      if(direction === "up"){
+        this.position.bottom += (offsetBottomValue <= limitMovement) ? neutralValue : this.velocity;
+      }
+      
+      if(direction === "down"){
+        this.position.bottom -= (offsetTopValue >= limitMovement) ? neutralValue : this.velocity;
+      }
+      
     }
  
     setMovementForAllPlatformsAndInsertInElement(platforms){
-        // @TODO - Responsabilidade unica
-        platforms.map((platform)=>{
-            if(this.calculationToKnowWhichPlatformWillReceiveTheMovement(platform)){
-                platform.movement = false;
-            }
-            this.insert(platform);
-        })
+      // @TODO - Responsabilidade unica
+      platforms.map((platform)=>{
+        if(this.calculationToKnowWhichPlatformWillReceiveTheMovement(platform)){
+          platform.movement = false;
+        }
+        this.insert(platform);
+      })
     }
 
     calculationToKnowWhichPlatformWillReceiveTheMovement({ index }){
-        const dividerParameter = 3;
-        const equalityParameter = 0;
-        return index % dividerParameter ==! equalityParameter;
+      const dividerParameter = 3;
+      const equalityParameter = 0;
+      return index % dividerParameter ==! equalityParameter;
     }
 
     insert(screenObject){

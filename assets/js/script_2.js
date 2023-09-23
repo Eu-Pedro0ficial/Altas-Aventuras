@@ -86,7 +86,8 @@ document.addEventListener('keydown', ( event )=>{
 document.addEventListener('keyup', ( event )=>{
     screen.pressKey(event.key, false);
 });
-   
+
+// @TODO - Numeros magicos
 // @TODO - Reduzir os if
 // @TODO - Diminuir blocos de codigo denso
 // @TODO - Fazer o personagem detectar as plataformas

@@ -7,7 +7,7 @@ class Screen{
             platformList: null,
             gravity: false 
         }
-        this.config = {
+        this.CONFIG = {
             ...options_default,
             ...options
         };
@@ -51,11 +51,11 @@ class Screen{
         }
         this.isJump = false;
 
-        this.insert(this.config.character);
-        this.insert(this.config.background);
+        this.insert(this.CONFIG.character);
+        this.insert(this.CONFIG.background);
 
-        this.config.background.setMovementForAllPlatformsAndInsertInElement(this.config.platformList);
-        this.screenObjects.push(...this.config.platformList);
+        this.CONFIG.background.setMovementForAllPlatformsAndInsertInElement(this.CONFIG.platformList);
+        this.screenObjects.push(...this.CONFIG.platformList);
 
         this.drawScreenObjects();
     }
@@ -67,8 +67,8 @@ class Screen{
 
     setProperties(){
       this.containerSize = this.container.clientWidth;
-      this.floor = this.containerSize - this.config.character.characterSize;
-      this.rightHoritontalLimit = this.containerSize - this.config.character.characterSize;
+      this.floor = this.containerSize - this.CONFIG.character.characterSize;
+      this.rightHoritontalLimit = this.containerSize - this.CONFIG.character.characterSize;
     }
 
     getElement(){
@@ -78,7 +78,7 @@ class Screen{
     draw() {
       this.drawScreenObjects();
       
-      if(this.config.gravity) {
+      if(this.CONFIG.gravity) {
           this.enableGravity();
       }
 
@@ -107,29 +107,31 @@ class Screen{
     }
     
     setLastFallPositionCharacter(){
-      this.lastFallPositionCharacter = this.config.character.element.offsetTop;
+      this.lastFallPositionCharacter = this.CONFIG.character.element.offsetTop;
     }
 
     detectCollision(){
-      this.config.platformList.forEach(platform => {
-          
+      this.CONFIG.platformList.forEach(platform => {
+          // Implemenar o detectCollision
       });
     }
 
     gravitySwitch(config){
-      this.config.gravity = (config === 'on') ? true : false;
+      this.CONFIG.gravity = (config === 'on') ? true : false;
     }
 
     enableGravity () {
-      if (!this.isJump) {
-        if (this.config.character.position.y < this.floor) {
-          this.controlGravity += this.acceleration;
-          this.config.character.position.y += this.controlGravity;
-          this.config.character.image = "fallingDown";
-        } else {
-          this.config.character.image = "person";
-          this.controlGravity = this.strength;
-        }
+      if(this.isJump){
+        return
+      }
+
+      if (this.CONFIG.character.position.y < this.floor) {
+        this.controlGravity += this.acceleration;
+        this.CONFIG.character.position.y += this.controlGravity;
+        this.setImageFromCharacter("fallingDown")
+      } else {
+        this.setImageFromCharacter("person")
+        this.controlGravity = this.strength;
       }
     }
 
@@ -140,10 +142,10 @@ class Screen{
         let jumped = 0;
         let index = setInterval(()=> {
           if (jumped <= this.sizeJump) {
-            this.config.character.position.y -= this.config.character.velocity.y;
-            jumped += this.config.character.velocity.y;
-            this.config.character.image = "jumping";
-            this.config.character.song = "jumping";
+            this.CONFIG.character.position.y -= this.CONFIG.character.velocity.y;
+            jumped += this.CONFIG.character.velocity.y;
+            this.setImageFromCharacter("jumping")
+            this.CONFIG.character.song = "jumping";
           }else {
             this.isJump = false;
             clearInterval(index);
@@ -151,20 +153,18 @@ class Screen{
         }, 10);
       }
     }
+    
+    setImageFromCharacter(imageName){
+      this.CONFIG.character.image = imageName;
+    }
 
     moveCharacter() {
       if(this.keys.arrowLeft){
-        this.config.character.position.x -= 
-          this.leftHoritontalLimit <= this.config.character.position.x ? 
-          this.config.character.velocity.x : 
-          0;
+        this.CONFIG.character.startingMovementTo("left", this.leftHoritontalLimit);
       }
       
       if(this.keys.arrowRight){
-        this.config.character.position.x += 
-          this.rightHoritontalLimit >= this.config.character.position.x ? 
-          this.config.character.velocity.x :
-          0;
+        this.CONFIG.character.startingMovementTo("right", this.rightHoritontalLimit);
       }
 
       if(this.keys.space){
@@ -173,45 +173,37 @@ class Screen{
     }
 
     moveScenario() {
+      const lowestLimit = 0;
+      const highestLimit = 480;
+
       if(this.keys.arrowUp){
-        let offsetBottom = this.config.background.scenario.offsetTop + this.config.background.scenario.offsetHeight;
-        this.config.background.position.bottom += 
-          offsetBottom <= 480 ? 
-          0 :  
-          this.config.background.velocity;
+        this.CONFIG.background.startingMovementTo("up", highestLimit);
       }
       
       if(this.keys.arrowDown){
-        this.config.background.position.bottom -= 
-          this.config.background.scenario.offsetTop >= 0 ? 
-          0 : 
-          this.config.background.velocity;
+        this.CONFIG.background.startingMovementTo("down", lowestLimit);
       }
     }
 
     movePlatforms(){
-      const containerStartingPointSize = 0;
-      const containerFullSize = 330;
+      const containerStartingPoint = 0;
+      const containerEndpoint = 330;
 
-      if(!this.config.platformList){
+      if(!this.CONFIG.platformList){
         return;
       }
 
-      this.config.platformList.map((platform)=>{
-        if(platform.movement){
-          if(platform.direction === "left"){
-            if(platform.position.x <= containerStartingPointSize){
-                platform.direction = "right";
-            }
-            platform.position.x -= platform.velocity.x
-          }
-          
-          if(platform.direction === "right"){
-            if(platform.position.x >= containerFullSize){
-                platform.direction = "left";
-            }
-            platform.position.x += platform.velocity.x
-          }
+      this.CONFIG.platformList.map((platform)=>{
+        if(!platform.movement){
+          return
+        }
+
+        if(platform.direction === "left"){
+          platform.startingMovementTo("left", containerStartingPoint);
+        }
+        
+        if(platform.direction === "right"){
+          platform.startingMovementTo("right", containerEndpoint);
         }
       })
     }
